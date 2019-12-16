@@ -1,6 +1,7 @@
 import re
 import datetime
 
+
 def clear_start(clear_start_list):
     start = False
     result = []
@@ -47,30 +48,29 @@ def month_to_int(month):
 
 def convert_rows_to_album_rating_list(rows):
     album_ratings_list = []
-    ratingRE = re.compile(r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s'  # month
-                          r'(\d{2})\s'              # day
-                          r'(\d{4})[\s]*'            # year
-                          r'(\d.\d{2}) stars\s'     # rating
-                          r'\[Rating[0-9]*\]\s'     # skipping rym rating number
-                          r'(.*)\n')                # full artist name + album name + year
+    rating_regex = re.compile(
+        r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s'  # month
+        r'(\d{2})\s'              # day
+        r'(\d{4})[\s]*'            # year
+        r'(\d.\d{2}) stars\s'     # rating
+        r'\[Rating[0-9]*\]\s'     # skipping rym rating number
+        r'(.*)\n'
+    )                # full artist name + album name + year
 
-    m = ratingRE.finditer(rows)
+    m = rating_regex.finditer(rows)
     for match in m:
         assert(month_to_int("Aug") == 8)
         month = month_to_int(match.group(1))
         ratedate = datetime.date(int(match.group(3)), month, int(match.group(2)))
-        album_ratings_list.append(AlbumRating(ratedate, match.group(5),match.group(4)))
+        album_ratings_list.append(AlbumRating(ratedate, match.group(5), match.group(4)))
 
     return album_ratings_list
 
 
-file = open("rym - excel test.txt", encoding='utf-8')
+file = open("in.txt", encoding='utf-8')
 text = file.read()
-rows = text.split("\n")
-cleared = clear_start(rows)
-list = convert_rows_to_album_rating_list(text)
+album_rating_list = convert_rows_to_album_rating_list(text)
 
 with open("result.txt", "w+", encoding="utf-8") as out:
-    for x in list:
-        out.write(str(x) + '\n')
-
+    for album_rating in album_rating_list:
+        out.write(str(album_rating) + '\n')
