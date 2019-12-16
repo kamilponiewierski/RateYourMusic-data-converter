@@ -2,18 +2,6 @@ import re
 import datetime
 
 
-def clear_start(clear_start_list):
-    start = False
-    result = []
-    for row in clear_start_list:
-        if start:
-            result.append(row)
-        if row == r'Art	Date / Rating	Artist / Release (Release Date)	Ownership	Tags':
-            start = True
-
-    return result
-
-
 class AlbumRating:
     rating = 0
     name = ""
@@ -46,7 +34,7 @@ def month_to_int(month):
     return months[month]
 
 
-def convert_rows_to_album_rating_list(rows):
+def convert_text_to_album_rating_list(rows):
     album_ratings_list = []
     rating_regex = re.compile(
         r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s'  # month
@@ -69,7 +57,8 @@ def convert_rows_to_album_rating_list(rows):
 
 file = open("in.txt", encoding='utf-8')
 text = file.read()
-album_rating_list = convert_rows_to_album_rating_list(text)
+album_rating_list = convert_text_to_album_rating_list(text)
+file.close()
 
 with open("result.txt", "w+", encoding="utf-8") as out:
     for album_rating in album_rating_list:
