@@ -38,12 +38,12 @@ def convert_text_to_album_rating_list(rows):
     album_ratings_list = []
     rating_regex = re.compile(
         r'(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s'  # month
-        r'(\d{2})\s'              # day
-        r'(\d{4})[\s]*'            # year
-        r'(\d.\d{2}) stars\s'     # rating
-        r'\[Rating[0-9]*\]\s'     # skipping rym rating number
-        r'(.*)\n'
-    )                # full artist name + album name + year
+        r'(\d{2})\s'                                            # day
+        r'(\d{4})[\s]*'                                         # year
+        r'(\d.\d{2}) stars\s'                                   # rating
+        r'\[Rating[0-9]*\]\s\s'                                 # skipping rym rating number
+        r'(.*)\n'                                               # artist name + album name + year
+    )
 
     m = rating_regex.finditer(rows)
     for match in m:
